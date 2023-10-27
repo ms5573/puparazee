@@ -1,6 +1,20 @@
-let userEmail = prompt("Please enter your email to start the voting process:");
-if (!userEmail) {
-    alert("Email is required to start the voting process!");
+document.getElementById("emailForm").addEventListener("submit", function(event) {
+    event.preventDefault();
+    startVoting();
+    hideEmailForm();
+});
+
+let userEmail = "";
+let currentDog = null; // To store the currently displayed dog that was selected
+
+function startVoting() {
+    userEmail = document.getElementById("userEmail").value;
+    currentDog = null; // Reset
+    displayTwoRandomDogs();
+}
+
+function hideEmailForm() {
+    document.getElementById("emailDiv").style.display = "none";
 }
 
 const dogs = [
@@ -17,69 +31,44 @@ const dogs = [
     { name: 'Coco', image: 'images/dog10.jpg', description: "This is just test data for now. Isn't this dog cute. He likes to play and go for walks" }
 ];
 
+function displayTwoRandomDogs() {
+    const dogsContainer = document.getElementById("dogsContainer");
+    dogsContainer.innerHTML = ""; // Clear previous dogs
+    dogsContainer.style.display = "block";
 
-let currentSet = 0;
-let userChoices = [];
+    if (!currentDog) {
+        currentDog = getRandomDog();
+    }
+    let secondDog = getRandomDog(currentDog);
 
-function pickDog(name) {
-    const timestamp = new Date().toISOString();
-    const dog1 = dogs[currentSet * 2];
-    const dog2 = dogs[currentSet * 2 + 1];
-
-    const choice = {
-        email: userEmail,
-        timestamp: timestamp,
-        imagesPresented: [dog1.name, dog2.name],
-        userChoice: name
-    };
-
-    userChoices.push(choice);
-
-    alert('You picked ' + name + '!');
-    currentSet++;
-    updateDogImages();
+    displayDog(currentDog, dogsContainer);
+    displayDog(secondDog, dogsContainer);
 }
 
-function updateDogImages() {
-    if (currentSet * 2 >= dogs.length) {
-        alert('You have seen all the dogs!');
-        finishVoting();
+function getRandomDog(excludeDog) {
+    let availableDogs = dogs.filter(dog => !dog.shown && dog !== excludeDog);
+    if (availableDogs.length === 0) {
+        alert("All dogs have been shown!");
+        startVoting(); // Reset the voting process
         return;
     }
-
-    const dog1 = dogs[currentSet * 2];
-    const dog2 = dogs[currentSet * 2 + 1];
-
-    document.getElementById('dog1-img').src = dog1.image;
-    document.getElementById('dog1-desc').innerText = dog1.description;
-    document.getElementById('dog1-btn').onclick = function () { pickDog(dog1.name); };
-
-    document.getElementById('dog2-img').src = dog2.image;
-    document.getElementById('dog2-desc').innerText = dog2.description;
-    document.getElementById('dog2-btn').onclick = function () { pickDog(dog2.name); };
+    const randomIndex = Math.floor(Math.random() * availableDogs.length);
+    const selectedDog = availableDogs[randomIndex];
+    selectedDog.shown = true; // Mark as shown
+    return selectedDog;
 }
 
-function finishVoting() {
-    console.log("User Choices: ", userChoices);
-
-    fetch('YOUR_SERVER_ENDPOINT', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(userChoices),
-    })
-    .then(response => response.json())
-    .then(data => {
-        console.log('Success:', data);
-    })
-    .catch((error) => {
-        console.error('Error:', error);
-    });
+function displayDog(dog, container) {
+    const dogDiv = document.createElement('div');
+    dogDiv.innerHTML = `
+        <img src="${dog.image}" alt="${dog.name}" width="200">
+        <p>${dog.description}</p>
+        <button onclick="voteForDog('${dog.name}')">Pick ${dog.name}</button>
+    `;
+    container.appendChild(dogDiv);
 }
 
-
-//function finishVoting() {
-    //console.log("User Choices: ", userChoices);
-    // You can also send the userChoices to a server for further processing
-//}
+function voteForDog(dogName) {
+    currentDog = dogs.find(dog => dog.name === dogName);
+    displayTwoRandomDogs(); // Display the selected dog with a new dog
+}

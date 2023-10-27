@@ -1,22 +1,22 @@
-.dog-container {
+#dogsContainer {
     display: flex;
-    justify-content: space-around;
-    align-items: center;
+    justify-content: space-around;  /* evenly space the items with equal space around them */
+    align-items: center;  /* align items vertically in the center */
     margin-top: 50px;
 }
-        
-.dog {
+
+#dogsContainer > div {
+    margin: 10px;
     text-align: center;
-    font-size: 18px;
+    font-size: 18px;  /* set font size for text inside the div */
 }
 
-        
 img {
-    width: 400px;
-    height: 400px;
+    width: 400px;  /* set the width of the images */
+    height: 400px;  /* set the height of the images */
     object-fit: cover;
 }
-        
+
 button {
     padding: 10px;
     font-size: 16px;

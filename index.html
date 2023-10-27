@@ -1,28 +1,22 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dog Picker</title>
     <link rel="stylesheet" href="style.css">
+    <title>Dog Voting</title>
 </head>
-<body>
-    <h1>Pick Your Favorite Dog</h1>
-    
-    <div class="dog-container">
-        <div class="dog" id="dog1">
-            <img src="images/dog1.png" alt="Dog 1" id="dog1-img">
-            <p id="dog1-desc">Meet Max, a playful Golden Retriever who loves to fetch and play in the park.</p>
-            <button onclick="pickDog('Max')" id="dog1-btn">Pick Max</button>
-        </div>
-        
-        <div class="dog" id="dog2">
-            <img src="images/dog2.png" alt="Dog 2" id="dog2-img">
-            <p id="dog2-desc">Meet Bella, a charming Corgi who loves belly rubs and treats.</p>
-            <button onclick="pickDog('Bella')" id="dog2-btn">Pick Bella</button>
-        </div>
-    </div>
 
+<body>
+    <div id="emailDiv">
+        <form id="emailForm">
+            <input type="email" id="userEmail" placeholder="Enter your email" required>
+            <input type="submit" value="Start Voting">
+        </form>
+    </div>
+    <div id="dogsContainer" style="display: none;"></div>
     <script src="script.js"></script>
 </body>
+
 </html>
