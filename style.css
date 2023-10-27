@@ -1,19 +1,30 @@
+
+#logoContainer {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+#logo {
+    max-width: 200px;
+    height: auto;
+}
+
 #dogsContainer {
     display: flex;
-    justify-content: space-around;  /* evenly space the items with equal space around them */
-    align-items: center;  /* align items vertically in the center */
+    justify-content: space-around;
+    align-items: center;
     margin-top: 50px;
 }
 
 #dogsContainer > div {
     margin: 10px;
     text-align: center;
-    font-size: 18px;  /* set font size for text inside the div */
+    font-size: 18px;
 }
 
 img {
-    width: 400px;  /* set the width of the images */
-    height: 400px;  /* set the height of the images */
+    width: 400px;
+    height: 400px;
     object-fit: cover;
 }
 
