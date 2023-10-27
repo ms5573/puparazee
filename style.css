@@ -1,0 +1,23 @@
+.dog-container {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    margin-top: 50px;
+}
+        
+.dog {
+    text-align: center;
+    font-size: 18px;
+}
+
+        
+img {
+    width: 400px;
+    height: 400px;
+    object-fit: cover;
+}
+        
+button {
+    padding: 10px;
+    font-size: 16px;
+}
