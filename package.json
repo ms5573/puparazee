@@ -1,0 +1,12 @@
+{
+  "name": "puparazee",
+  "private": true,
+  "description": "Passive PHP2Shell header checker for puparazee.com",
+  "engines": {
+    "node": "22.x"
+  },
+  "scripts": {
+    "test": "node --test",
+    "build": "node --check api/check.js && node --check lib/errors.js && node --check lib/ssrf.js && node --check lib/classify.js && node --check lib/fetch-headers.js && node --check lib/rate-limit.js && node --check lib/check-site.js && node --test"
+  }
+}

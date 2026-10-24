@@ -1,25 +1,152 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="style.css">
-    <title>Dog Voting</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>PHP2Shell checker</title>
+  <meta name="description" content="Free PHP2Shell checker for CVE-2026-109618 and CVE-2026-109619. Compares PHP version headers with the fixed releases. Passive only, not an exploit test.">
+  <meta name="robots" content="index,follow">
+  <link rel="canonical" href="https://puparazee.com/">
+  <meta property="og:title" content="PHP2Shell checker">
+  <meta property="og:description" content="Is your site affected by PHP2Shell? A free passive check of PHP version headers for CVE-2026-109618 and CVE-2026-109619.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://puparazee.com/">
+  <meta name="twitter:card" content="summary">
+  <meta name="theme-color" content="#f6f4ef">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/style.css">
 </head>
-
 <body>
-    <div id="logoContainer">
-        <img src="logo.png" alt="Logo" id="logo">
-    </div>
-    <div id="emailDiv">
-        <form id="emailForm">
-            <input type="email" id="userEmail" placeholder="Enter your email" required>
-            <input type="submit" value="Start Voting">
-        </form>
-    </div>
-    <div id="dogsContainer" style="display: none;"></div>
-    <script src="script.js"></script>
-</body>
+  <header class="wrap">
+    <p class="eyebrow">PHP security note</p>
+    <h1>PHP2Shell checker</h1>
+    <p class="lede">Is your site affected by PHP2Shell?</p>
+  </header>
 
+  <main class="wrap">
+    <section>
+      <p>
+        PHP2Shell is the name used for two PHP vulnerabilities disclosed on 21 October 2026:
+        <a href="https://github.com/php/php-src/security/advisories/GHSA-w8hw-w9fx-j79w">CVE-2026-109618</a>
+        and
+        <a href="https://github.com/php/php-src/security/advisories/GHSA-6wmf-4rv5-p3rp">CVE-2026-109619</a>.
+        They can allow unauthenticated remote code execution on PHP installations that serve web requests.
+        The PHP project published fixed releases the same day.
+      </p>
+      <p>
+        The practical step is to run a fixed release. Header checks on this page are only a first look at the version a server chooses to advertise.
+      </p>
+    </section>
+
+    <section>
+      <h2>Fixed versions</h2>
+      <div class="table-wrap">
+        <table>
+          <caption>Upstream PHP releases that include the 21 October 2026 fixes</caption>
+          <thead>
+            <tr>
+              <th scope="col">Branch</th>
+              <th scope="col">Fixed release</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>PHP 8.5</td>
+              <td>8.5.12</td>
+            </tr>
+            <tr>
+              <td>PHP 8.4</td>
+              <td>8.4.27</td>
+            </tr>
+            <tr>
+              <td>PHP 8.3</td>
+              <td>8.3.36</td>
+            </tr>
+            <tr>
+              <td>PHP 8.2</td>
+              <td>8.2.35</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p>
+        PHP 8.1 and older are out of upstream support. They do not get a fixed point release for this issue, so those installs need an upgrade to a supported branch: 8.2.35, 8.3.36, 8.4.27, 8.5.12, or a later release on those branches.
+      </p>
+    </section>
+
+    <section>
+      <h2>Sources</h2>
+      <ul>
+        <li><a href="https://www.php.net/">php.net</a></li>
+        <li><a href="https://github.com/php/php-src/security/advisories/GHSA-w8hw-w9fx-j79w">GHSA-w8hw-w9fx-j79w</a> (CVE-2026-109618)</li>
+        <li><a href="https://github.com/php/php-src/security/advisories/GHSA-6wmf-4rv5-p3rp">GHSA-6wmf-4rv5-p3rp</a> (CVE-2026-109619)</li>
+      </ul>
+    </section>
+
+    <section class="disclaimer" id="disclaimer">
+      <h2>Disclaimer</h2>
+      <p>
+        A header version check can overstate exposure. Linux distributions and long-term support vendors often backport fixes without changing the version string PHP reports. This is not a confirmed exploit test.
+      </p>
+      <p>
+        “Likely affected” means the advertised version is older than the upstream fix. It does not mean the site has been compromised, and it does not mean an attack would succeed. “Likely patched”, “end of life”, and “not PHP” are not guarantees. Confirm the PHP build that actually serves the site, or ask the host.
+      </p>
+    </section>
+
+    <section id="check">
+      <h2>Free header check</h2>
+      <p>
+        Enter a public website address. The checker requests that URL with a normal GET and reads response headers only: <code>X-Powered-By</code>, <code>Server</code>, and a few WordPress hints (<code>Link</code>, <code>X-Pingback</code>, <code>X-Redirect-By</code>). It sends no request body, no file upload, and nothing intended to trigger the bug. HTTPS is used when you leave the scheme off, and it is tried first if you enter HTTP.
+      </p>
+      <p>Nothing you submit is sent to an analytics service. The address is used only for this header request.</p>
+      <form id="check-form" action="#check" method="post">
+        <label for="url">Website URL</label>
+        <div class="form-row">
+          <input id="url" name="url" type="url" inputmode="url" spellcheck="false" autocomplete="off" placeholder="https://example.com" required>
+          <button type="submit">Check headers</button>
+        </div>
+      </form>
+      <noscript>
+        <p>The checker needs JavaScript. The version guidance above does not.</p>
+      </noscript>
+      <div id="result" class="result" aria-live="polite"></div>
+    </section>
+
+    <section>
+      <h2>What the labels mean</h2>
+      <dl class="labels">
+        <dt>Likely affected</dt>
+        <dd>Headers advertise a supported branch older than the fixed release. Read the disclaimer before treating that as the final word.</dd>
+        <dt>Likely patched</dt>
+        <dd>Headers advertise 8.2.35, 8.3.36, 8.4.27, 8.5.12, or a later point release on those branches.</dd>
+        <dt>End of life</dt>
+        <dd>Headers advertise PHP 8.1 or older. The PHP project does not ship this fix on those branches.</dd>
+        <dt>Not PHP</dt>
+        <dd>Headers name another stack and do not mention PHP.</dd>
+        <dt>Unknown</dt>
+        <dd>Headers do not include a PHP version. WordPress sites often fall here because the version is hidden.</dd>
+      </dl>
+    </section>
+
+    <section>
+      <h2>About</h2>
+      <p>I'm Marc Smith. I follow PHP security issues and built this free checker.</p>
+    </section>
+
+    <aside class="optional">
+      <h2>Optional help</h2>
+      <p>
+        If you want paid help planning an upgrade, reply to the message that brought you here, or email
+        <a href="mailto:contact@puparazee.com">contact@puparazee.com</a>.
+        That is optional and separate from this free check.
+      </p>
+    </aside>
+  </main>
+
+  <footer class="wrap">
+    <p><a href="mailto:contact@puparazee.com">contact@puparazee.com</a></p>
+    <p>Checks are passive only: one normal page request, response headers only, no exploit traffic.</p>
+  </footer>
+  <script src="/script.js" defer></script>
+</body>
 </html>
