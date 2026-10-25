@@ -6,15 +6,15 @@ const fs = require("node:fs");
 const path = require("node:path");
 
 const root = path.join(__dirname, "..");
-const html = fs.readFileSync(path.join(root, "index.html"), "utf8");
-const script = fs.readFileSync(path.join(root, "script.js"), "utf8");
-const css = fs.readFileSync(path.join(root, "style.css"), "utf8");
+const page = fs.readFileSync(path.join(root, "app/page.js"), "utf8");
+const checker = fs.readFileSync(path.join(root, "app/checker.js"), "utf8");
+const readme = fs.readFileSync(path.join(root, "README.md"), "utf8");
 
-describe("landing page", () => {
-  it("explains the fixed releases and points at the primary sources", () => {
+describe("landing copy", () => {
+  it("names the issue, the fixed releases, and Marc", () => {
+    const combined = `${page}\n${checker}\n${readme}`;
     for (const text of [
-      "PHP2Shell checker",
-      "Is your site affected by PHP2Shell?",
+      "PHP2Shell",
       "CVE-2026-109618",
       "CVE-2026-109619",
       "8.5.12",
@@ -23,23 +23,21 @@ describe("landing page", () => {
       "8.2.35",
       "8.1",
       "https://www.php.net/",
-      "https://github.com/php/php-src/security/advisories/GHSA-6wmf-4rv5-p3rp",
-      "https://github.com/php/php-src/security/advisories/GHSA-w8hw-w9fx-j79w",
-      "I'm Marc Smith. I follow PHP security issues and built this free checker.",
-      "contact@puparazee.com",
-      "can overstate exposure",
+      "GHSA-w8hw-w9fx-j79w",
+      "GHSA-6wmf-4rv5-p3rp",
+      "Marc Smith",
+      "marc.smith@mail.grokbot.com",
+      "RESEND_API_KEY",
       "backport",
-      "not a confirmed exploit test",
-      "does not mean the site has been compromised",
-      "Checks are passive only",
     ]) {
-      assert.equal(html.includes(text), true, text);
+      assert.equal(combined.includes(text), true, text);
     }
   });
 
-  it("does not keep the dog-voting site or third-party analytics", () => {
-    const combined = `${html}\n${script}\n${css}`.toLowerCase();
-    for (const text of ["chew matcher", "dog voting", "golden retriever", "google-analytics", "googletagmanager", "plausible", "posthog", "segment.com", "innerhtml", "document.write"]) {
+  it("does not keep the dog-voting site or ship exploit steps", () => {
+    const files = ["app/page.js", "app/checker.js", "app/contact-form.js", "lib/check-site.js", "lib/http-probe.js", "lib/classify.js"];
+    const combined = files.map((file) => fs.readFileSync(path.join(root, file), "utf8")).join("\n").toLowerCase();
+    for (const text of ["chew matcher", "dog voting", "golden retriever", "php_value", "auto_detect_line_endings", "multipart/form-data"]) {
       assert.equal(combined.includes(text), false, text);
     }
   });

@@ -1,12 +1,19 @@
 {
   "name": "puparazee",
   "private": true,
-  "description": "Passive PHP2Shell header checker for puparazee.com",
+  "description": "Passive PHP2Shell checker for puparazee.com",
   "engines": {
     "node": "22.x"
   },
   "scripts": {
-    "test": "node --test",
-    "build": "node --check api/check.js && node --check lib/errors.js && node --check lib/ssrf.js && node --check lib/classify.js && node --check lib/fetch-headers.js && node --check lib/rate-limit.js && node --check lib/check-site.js && node --test"
+    "dev": "NEXT_TELEMETRY_DISABLED=1 next dev",
+    "build": "NEXT_TELEMETRY_DISABLED=1 next build",
+    "start": "NEXT_TELEMETRY_DISABLED=1 next start",
+    "test": "node --test"
+  },
+  "dependencies": {
+    "next": "^15.5.4",
+    "react": "^19.1.1",
+    "react-dom": "^19.1.1"
   }
 }
